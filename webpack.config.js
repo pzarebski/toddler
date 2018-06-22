@@ -58,14 +58,21 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        query: {
+          presets: ["es2015"]
+        }
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
+        test: /\.(jpe?g|png|gif|svg)$/i,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]?[hash]'
         }
+      },
+      { 
+        test: /\.(woff|woff2|eot|ttf|svg)$/, 
+        loader: 'url-loader?limit=100000' 
       }
     ]
   },
@@ -103,6 +110,21 @@ if (process.env.NODE_ENV === 'production') {
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jquery: 'jquery',
+      'window.jQuery': 'jquery',
+      jQuery: 'jquery'
+    })
+  ]) 
+} else {
+  module.exports.plugins = (module.exports.plugins || []).concat([    
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jquery: 'jquery',
+      'window.jQuery': 'jquery',
+      jQuery: 'jquery'
     })
   ])
 }
